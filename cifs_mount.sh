@@ -18,6 +18,7 @@
 # You can download the latest version of this script from:
 # https://github.com/MiSTer-devel/Scripts_MiSTer
 
+# Version 2.1.2 - 2024-07-04 - Fixed mounting of subdirectories when LOCAL_DIR="*" and SINGLE_CIFS_CONNECTION="false"
 # Version 2.1.1 - 2023-11-16 - Updated Github link, fixed unary operator error if "SHARE_DIRECTORY" not specified.
 # Version 2.1.0 - 2022-04-16 - Introduced "SHARE_DIRECTORY" option; useful if you don't have a dedicated MiSTer-share on the remote server, but only a specific folder which should be mounted here.
 # Version 2.0.1 - 2019-05-06 - Removed kernel modules downloading, now the script asks to update the MiSTer Linux system when necessary.
@@ -336,7 +337,7 @@ then
 		for DIRECTORY in $LOCAL_DIR
 		do
 			mkdir -p "$BASE_PATH/$DIRECTORY" > /dev/null 2>&1
-			if mount -t cifs "$MOUNT_SOURCE" "$BASE_PATH/$DIRECTORY" -o "$MOUNT_OPTIONS"
+			if mount -t cifs "$MOUNT_SOURCE/$DIRECTORY" "$BASE_PATH/$DIRECTORY" -o "$MOUNT_OPTIONS"
 			then
 				echo "$DIRECTORY mounted"
 			else
