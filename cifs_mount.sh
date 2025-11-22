@@ -186,9 +186,10 @@ then
 	then
 		mount | grep "on / .*[(,]ro[,$]" -q && RO_ROOT="true"
 		[ "$RO_ROOT" == "true" ] && mount / -o remount,rw
-		echo "#!/bin/bash"$'\n'"$(realpath "$ORIGINAL_SCRIPT_PATH") &" > "$NET_UP_SCRIPT"
+		NET_SCRIPT_HEADER=$'#!/bin/bash\n[[ "$IFACE" == "lo" ]] && exit 0'
+		echo "$NET_SCRIPT_HEADER"$'\n'"$(realpath "$ORIGINAL_SCRIPT_PATH") &" > "$NET_UP_SCRIPT"
 		chmod +x "$NET_UP_SCRIPT"
-		echo "#!/bin/bash"$'\n'"umount -a -t cifs" > "$NET_DOWN_SCRIPT"
+		echo "$NET_SCRIPT_HEADER"$'\n'"umount -a -t cifs" > "$NET_DOWN_SCRIPT"
 		chmod +x "$NET_DOWN_SCRIPT"
 		sync
 		[ "$RO_ROOT" == "true" ] && mount / -o remount,ro
